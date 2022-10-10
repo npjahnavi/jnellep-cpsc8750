@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>An Example Title</title>
+    <link rel="stylesheet" href="app.css">
+  </head>
+  <body>
+    <h1>Hello, <%= name %>!</h1>
+    <h3>This site was accessed at</h3>
+    <h3 id="demo"></h3>
+    <script>
+    const d = new Date();
+    let text = d.toLocaleString();
+    document.getElementById("demo").innerHTML = text;
+    </script>
+    <p><b>You are visitor #<%= visitorIdValue %></b></p>
+   <p><b><%= visitSince %></b></p>
+  </body>
+</html>
