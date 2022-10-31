@@ -73,7 +73,7 @@ app.get("/trivia", async (req, res) => {
     return;
   }
 
-  const type =  content.results[0].type;
+  
   const category =  content.results[0].category;
   const difficulty =  content.results[0].difficulty;
   const question = content.results[0].question;
@@ -97,7 +97,6 @@ app.get("/trivia", async (req, res) => {
   res.render('trivia', {
     category: category,
     difficulty: difficulty,
-    type: type,
     question: question,
     correctanswer: correct_answer,
     answers: makeAnswerMap(correct_answer,answers)
