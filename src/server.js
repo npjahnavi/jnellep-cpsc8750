@@ -1,3 +1,5 @@
+const fetch = require('node-fetch');
+
 // use the express library
 const express = require('express');
 
@@ -49,6 +51,64 @@ console.log("cookies:",req.cookies);
 
 
 
+
+app.get("/trivia", async (req, res) => {
+  // fetch the data
+  const response = await fetch("https://opentdb.com/api.php?amount=1&type=multiple");
+
+  // fail if bad response
+  if (!response.ok) {
+    res.status(500);
+    res.send(`Open Trivia Database failed with HTTP code ${response.status}`);
+    return;
+  }
+
+  // interpret the body as json
+  const content = await response.json();
+
+  // fail if db failed
+  if (content.response_code !== 0) {
+    res.status(500);
+    res.send(`Open Trivia Database failed with internal response code ${response.response_code}`);
+    return;
+  }
+  
+  const category =  content.results[0].category;
+  const difficulty =  content.results[0].difficulty;
+  const question = content.results[0].question;
+  const correct_answer = content.results[0].correct_answer;
+  const incorrect_answers = content.results[0].incorrect_answers;
+
+
+  res.render('trivia', {
+    category: category,
+    difficulty: difficulty,
+    question: question,
+    correctanswer: correct_answer,
+    answers: shuffle(options),
+   
+  });
+
+});
+
+
+function shuffle(array) {
+  let currentIndex = array.length,  randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
 
 // Start listening for network connections
 app.listen(port);
