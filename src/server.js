@@ -72,42 +72,39 @@ app.get("/trivia", async (req, res) => {
     res.send(`Open Trivia Database failed with internal response code ${response.response_code}`);
     return;
   }
-  
+
   const category =  content.results[0].category;
   const difficulty =  content.results[0].difficulty;
   const question = content.results[0].question;
   const correct_answer = content.results[0].correct_answer;
-  const incorrect_answers = content.results[0].incorrect_answers;
+  const answers = content.results[0].incorrect_answers;
+  answers.push(correct_answer);
 
+  idx = Math.floor(Math.random() * (4- 0) );
+  temp = answers[idx];
+  answers[idx] = answers[3];
+  answers[3] = temp;
+
+  const makeAnswerMap = (correctAnswer, answers) => {
+    const ans = answers.map(answer => {
+      return `<a href="javascript:alert('${answer === correctAnswer ? 'Correct!' : 'Incorrect, Please Try Again!'
+        }')">${answer}</a>`
+      });
+    return ans;
+  }
 
   res.render('trivia', {
     category: category,
     difficulty: difficulty,
     question: question,
     correctanswer: correct_answer,
-    answers: shuffle(options),
-   
+    answers: makeAnswerMap(correct_answer,answers)
+
   });
 
 });
 
 
-function shuffle(array) {
-  let currentIndex = array.length,  randomIndex;
-
-  // While there remain elements to shuffle.
-  while (currentIndex != 0) {
-
-    // Pick a remaining element.
-    randomIndex = Math.floor(Math.random() * currentIndex);
-
-    // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex], array[currentIndex]];
-  }
-
-  return array;
-}
 
 // Start listening for network connections
 app.listen(port);
